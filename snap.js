@@ -17,7 +17,7 @@
             element: null,
             dragger: null,
             disable: 'none',
-            addBodyClasses: true,
+            addBodyClasses: false,
             hyperextensible: true,
             resistance: 0.5,
             flickThreshold: 50,
