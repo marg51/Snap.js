@@ -80,6 +80,12 @@
                     return eventList[type].call();
                 }
             },
+            hasEvent: function(type) {
+                if (typeof eventList[type] === 'function') {
+                    return true
+                }
+                return false
+            },
             vendor: function(){
                 var tmp = doc.createElement("div"),
                     prefixes = 'webkit Moz O ms'.split(' '),
@@ -183,7 +189,10 @@
                     settings.element.style[cache.vendor+'Transition'] = '';
                     cache.translation = action.translate.get.matrix(4);
                     cache.easing = false;
-                    clearInterval(cache.animatingInterval);
+
+                    if (cache.animatingInterval) {
+                        clearInterval(cache.animatingInterval);
+                    }
 
                     if(cache.easingTo===0){
                         utils.klass.remove(doc.body, 'snapjs-right');
@@ -194,7 +203,6 @@
                     utils.events.removeEvent(settings.element, utils.transitionCallback(), action.translate.easeCallback);
                 },
                 easeTo: function(n) {
-
                     if( !utils.canTransform() ){
                         cache.translation = n;
                         action.translate.x(n);
@@ -204,9 +212,11 @@
 
                         settings.element.style[cache.vendor+'Transition'] = 'all ' + settings.transitionSpeed + 's ' + settings.easing;
 
-                        cache.animatingInterval = setInterval(function() {
-                            utils.dispatchEvent('animating');
-                        }, 1);
+                        if ( utils.hasEvent('animating') ) {
+                            cache.animatingInterval = setInterval(function() {
+                                 utils.dispatchEvent('animating');
+                             }, 5);
+                        }
                         
                         utils.events.addEvent(settings.element, utils.transitionCallback(), action.translate.easeCallback);
                         action.translate.x(n);
